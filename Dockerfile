@@ -1,7 +1,9 @@
-FROM node:lts
+FROM node:20
 
-# Install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg imagemagick webp && apt-get clean
+# Install dependencies (including build tools for sqlite3 / better-sqlite3)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg imagemagick webp build-essential python3 \
+    && apt-get clean
 
 # Set working directory
 WORKDIR /app
@@ -21,5 +23,5 @@ EXPOSE 3000
 # Set environment
 ENV NODE_ENV=production
 
-# Run command (use the new "serve" script to keep container alive)
+# Run command
 CMD ["npm", "run", "serve"]
