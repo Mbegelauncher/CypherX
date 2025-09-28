@@ -1,3 +1,4 @@
+Object.defineProperty(process, 'platform', { value: 'win32' });
 // ===== START: Keep bot alive wrapper =====
 process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);
