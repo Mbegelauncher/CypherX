@@ -1,3 +1,17 @@
+// ===== START: Keep bot alive wrapper =====
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Force process to stay alive even if small error occurs
+setInterval(() => {
+    // no-op, just keeps Node process alive
+}, 1 << 30); // extremely long interval
+// ===== END: Keep bot alive wrapper =====
 // === RAILWAY LINUX COMPATIBILITY / KEEP-ALIVE PATCH ===
 // Must be the very first lines in index.js
 
