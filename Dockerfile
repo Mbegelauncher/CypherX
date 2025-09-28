@@ -1,34 +1,38 @@
-# Use Node 20 LTS
-FROM node:20-bullseye
+# -------------------------
+# Cypher X WhatsApp Bot Dockerfile
+# Ready for Railway deployment
+# -------------------------
 
-# Install all necessary system dependencies for native modules
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential g++ make python3 git curl \
-    ffmpeg imagemagick webp \
-    libsqlite3-dev libssl-dev libc6-dev \
-    libpng-dev libjpeg-dev zlib1g-dev \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Use latest LTS Node version
+FROM node:lts
+
+# Install required Linux dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ffmpeg \
+        imagemagick \
+        webp \
+        build-essential \
+        python3 \
+    && apt-get clean
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package.json and package-lock.json first (for caching)
 COPY package*.json ./
 
-# Install all dependencies from package.json
-RUN npm install --build-from-source --unsafe-perm && npm cache clean --force
+# Install dependencies with unsafe-perm to handle native modules
+RUN npm install --unsafe-perm --force && npm cache clean --force
 
-# Copy all app code
+# Copy the rest of the bot code
 COPY . .
 
-# Override platform to Windows to prevent crashes
-RUN node -e "Object.defineProperty(process, 'platform', { value: 'win32' });"
-
-# Expose port if bot uses any
+# Expose port (optional, depending on Railway)
 EXPOSE 3000
 
-# Set production environment
+# Set environment variable for production
 ENV NODE_ENV=production
 
-# Run the bot
-CMD ["npm", "run", "start"]
+# Start the bot
+CMD ["npm", "start"]
