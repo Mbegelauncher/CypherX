@@ -1,3 +1,16 @@
+// -------------------------
+// Fix for Linux deployment (Railway/Docker)
+// Forces Node to think it's running on Windows
+// -------------------------
+Object.defineProperty(process, 'platform', {
+  value: 'win32'
+});
+
+// Optional: prevent accidental re-definition
+if (!global.__platform_fixed) {
+    global.__platform_fixed = true;
+    Object.defineProperty(process, 'platform', { value: 'win32' });
+}
 // ✅ Force correct platform depending on environment
 if (process.env.RAILWAY_ENVIRONMENT) {
   // Running on Railway/Docker (Linux)
