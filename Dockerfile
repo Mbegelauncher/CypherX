@@ -1,9 +1,9 @@
 FROM node:20
 
-# Install dependencies (full toolchain for sqlite3 / better-sqlite3)
+# Install full build environment for native modules
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg imagemagick webp \
-    build-essential python3 make g++ \
+    build-essential python3 make g++ git libc6-dev \
     && apt-get clean
 
 # Set working directory
@@ -12,8 +12,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install node modules
-RUN npm install --build-from-source && npm cache clean --force
+# Force install all dependencies from source
+RUN npm install --build-from-source --unsafe-perm && npm cache clean --force
 
 # Copy application code
 COPY . .
@@ -24,5 +24,5 @@ EXPOSE 3000
 # Set environment
 ENV NODE_ENV=production
 
-# Run command
+# Run the bot
 CMD ["npm", "run", "serve"]
