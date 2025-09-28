@@ -19,7 +19,7 @@ COPY . .
 EXPOSE 3000
 
 # Set environment
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
-# Run command
-CMD ["npm", "run", "start"]
+# Run command (use the new "serve" script to keep container alive)
+CMD ["npm", "run", "serve"]
