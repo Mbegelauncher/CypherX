@@ -1,3 +1,15 @@
+// ✅ Force correct platform depending on environment
+if (process.env.RAILWAY_ENVIRONMENT) {
+  // Running on Railway/Docker (Linux)
+  Object.defineProperty(process, 'platform', {
+    value: 'linux'
+  });
+} else {
+  // Running locally on Windows
+  Object.defineProperty(process, 'platform', {
+    value: 'win32'
+  });
+}
 Object.defineProperty(process, 'platform', {
   value: 'win32'
 });
