@@ -9,10 +9,10 @@
   },
   "scripts": {
     "start": "node index.js",
-    "serve": "node -e \"const express=require('express');const app=express();app.get('/',(r,s)=>s.send('✅ CypherX Bot is running'));app.listen(process.env.PORT||3000,()=>console.log('Server alive on port',process.env.PORT||3000));require('./index.js');\"",
     "dev": "nodemon index.js",
     "stop": "pkill -f node || true",
     "restart": "npm run stop && npm run start",
+    "serve": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tylor",
@@ -60,12 +60,4 @@
   "devDependencies": {
     "nodemon": "^2.0.19"
   }
-}
-"scripts": {
-  "start": "node index.js",
-  "serve": "node index.js", 
-  "dev": "nodemon index.js",
-  "stop": "pkill -f node || true",
-  "restart": "npm run stop && npm run start",
-  "test": "echo \"Error: no test specified\" && exit 1"
 }
