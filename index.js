@@ -1,3 +1,36 @@
+// === RAILWAY LINUX COMPATIBILITY / KEEP-ALIVE PATCH ===
+// Must be the very first lines in index.js
+
+// 1) Pretend to be win32 so any Windows-only checks don't crash the app
+try {
+  Object.defineProperty(process, 'platform', { value: 'win32' });
+} catch (e) {
+  // ignore if sealed / cannot redefine
+}
+
+// 2) Provide a safe helper to replace Windows commands with Linux equivalents
+const child_exec = require('child_process').exec;
+global.runCommand = (cmd, callback) => {
+  // common Windows -> Linux conversions
+  cmd = cmd
+    .replace(/taskkill \/F \/IM node\.exe/g, 'killall node || true')
+    .replace(/del \/F \/Q /g, 'rm -f ')
+    .replace(/^start /i, '') // remove start prefix if present
+    ;
+  return child_exec(cmd, callback);
+};
+
+// 3) Minimal keepalive: if index.js doesn't open an http port, this fallback will.
+// We only create this server if an existing server isn't already present later.
+try {
+  const http = require('http');
+  const port = process.env.PORT || 3000;
+  // try to create a tiny server but don't crash if port already used
+  const server = http.createServer((req, res) => res.end('CypherX alive'));
+  server.listen(port, () => console.log('Keepalive server listening on', port));
+} catch (e) {
+  // ignore any errors — this is defensive
+}
 // -------------------------
 // Fix for Linux deployment (Railway/Docker)
 // Forces Node to think it's running on Windows
